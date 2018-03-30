@@ -6,7 +6,7 @@ defmodule Incense.Storage.ObjectTest do
   @moduletag :storage
 
   setup do
-    bucket = "incense-test"
+    bucket = "incense-storage-test"
     doge_file = {:file, Path.expand("../../support/doge_the_dog.jpg", __DIR__)}
 
     {:ok, bucket: bucket, doge_file: doge_file}

@@ -35,7 +35,7 @@ defmodule Incense.Storage.Object do
   def batch_delete(bucket, names) do
     {:ok, conn_ref} = :hackney.connect("https://www.googleapis.com", [{:recv_timeout, 30000}])
 
-    for names <- Enum.chunk(names, 500, 500, []) do
+    for names <- Enum.chunk_every(names, 100) do
       Incense.Backoff.retry do
         do_batch_delete(conn_ref, bucket, names)
       end
@@ -66,7 +66,7 @@ defmodule Incense.Storage.Object do
     body = "\r\n--" <> boundary <> "\r\n" <> mixed_body <> "--" <> boundary <> "--"
 
     {:ok, _status, _, conn_ref} =
-      :hackney.send_request(conn_ref, {:post, "/batch", headers, body})
+      :hackney.send_request(conn_ref, {:post, "/batch/storage/v1", headers, body})
 
     :hackney.skip_body(conn_ref)
   end
